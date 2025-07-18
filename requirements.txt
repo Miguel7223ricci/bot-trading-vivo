@@ -3,3 +3,4 @@ numpy==1.23.5
 yfinance==0.2.18
 joblib==1.2.0
 twilio==9.0.4
+python-dotenv==1.0.1
