@@ -1,5 +1,5 @@
 .env
 __pycache__/
 *.pyc
-*.pkl
+# *.pkl
 historial_senales_etiquetado_pro.csv

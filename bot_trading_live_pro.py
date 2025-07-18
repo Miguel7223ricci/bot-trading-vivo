@@ -2,37 +2,25 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import joblib
-import time
 from whatsapp_sender import enviar_whatsapp  # ✅ ENVÍO POR WHATSAPP
 
-# ✅ CONFIGURACIÓN
+# ✅ ACTIVOS FUNCIONALES
 activos_tickers = {
-    "EURUSD": "EURUSD=X",
-    "EURNZD": "EURNZD=X",
-    "GBPNZD": "GBPNZD=X",
-    "GBPJPY": "GBPJPY=X",
-    "NATGAS": "NG=F",
-    "GOLD": "GC=F",
-    "SOLANA": "SOL-USD",
-    "USDNOK": "USDNOK=X",
-    "USDCHF": "USDCHF=X",
-    "USDSEK": "USDSEK=X",
-    "EURSEK": "EURSEK=X",
-    "GBPAUD": "GBPAUD=X",
-    "AUDNZD": "AUDNZD=X",
-    "NZDUSD": "NZDUSD=X",
-    "EURCAD": "EURCAD=X",
-    "AUDUSD": "AUDUSD=X",
-    "EURAUD": "EURAUD=X",
-    "CADJPY": "CADJPY=X",
-    "WTI": "CL=F",
-    "US2000": "^RUT",
-    "US500": "^GSPC",
-    "US30": "^DJI",
+    "AAPL": "AAPL",
+    "MSFT": "MSFT",
+    "TSLA": "TSLA",
+    "AMZN": "AMZN",
+    "META": "META",
+    "NVDA": "NVDA",
     "BTC": "BTC-USD",
     "ETH": "ETH-USD",
-    "PALLADIUM": "PA=F",
-    "EU50": "^STOXX50E"
+    "SP500": "^GSPC",
+    "NASDAQ": "^IXIC",
+    "DOW30": "^DJI",
+    "OIL": "CL=F",
+    "GOLD": "GC=F",
+    "SILVER": "SI=F",
+    "NATGAS": "NG=F",
 }
 
 ema_rapida_period = 34
@@ -57,7 +45,6 @@ def calcular_indicadores(df):
     df['L-PC'] = abs(df['Low'] - df['Close'].shift(1))
     df['TR'] = df[['H-L', 'H-PC', 'L-PC']].max(axis=1)
     df['ATR'] = df['TR'].rolling(window=atr_window).mean()
-
     df['EMA_Rapida'] = df['Close'].ewm(span=ema_rapida_period, adjust=False).mean()
     df['EMA_Lenta'] = df['Close'].ewm(span=ema_lenta_period, adjust=False).mean()
 
@@ -150,7 +137,7 @@ def evaluar_señales(activo, df):
 def monitorear():
     print("✅ Iniciando monitoreo en vivo (versión PRO + WhatsApp).")
     for nombre, ticker in activos_tickers.items():
-        print(f"\n✅ Verificando {nombre}...")
+        print(f"✅ Verificando {nombre}...")
         try:
             df = yf.download(ticker, interval="4h", period="60d")
             if df.empty or len(df) < 100:
@@ -160,7 +147,7 @@ def monitorear():
             df = calcular_indicadores(df)
             señales = evaluar_señales(nombre, df)
             for mensaje in señales:
-                enviar_whatsapp(mensaje)  # ✅ ENVÍA WHATSAPP
+                enviar_whatsapp(mensaje)
         except Exception as e:
             print(f"⚠️ Error con {nombre}: {e}")
 
